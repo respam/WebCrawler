@@ -48,7 +48,7 @@ public class WebCrawler {
                 System.out.println(htmltext);
                 
             } catch (IOException e) {
-                System.out.println(urls.get(0));
+                System.out.println(urls.get(0) + " not working");
             }
             
         }
