@@ -6,9 +6,12 @@
 
 package webcrawler;
 
-import java.io.*;
-import java.net.URL;
+import java.io.IOException;
 import java.util.ArrayList;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 
 /**
@@ -33,6 +36,7 @@ public class WebCrawler {
     }
     
     public void crawl(String url) {
+        
         ArrayList<String> urls = new ArrayList<>();
 //        ArrayList<String> visited = new ArrayList<>();
         
@@ -40,17 +44,23 @@ public class WebCrawler {
 //        visited.add(url);
         
         while (urls.size() > 0) {
+            Document doc;
             try {
-                URL urlLink = new URL(url);
-                BufferedReader in;
-                in = new BufferedReader(new InputStreamReader(urlLink.openStream()));
-                String htmltext = in.readLine();
-                System.out.println(htmltext);
+                doc = Jsoup.connect(url).get();
+                
+                // getting all links
+                Elements links = doc.select("a[href]");
+                for (Element link : links) {
+                    
+                    //getting the value from href attribute
+                    System.out.println(link.attr("href"));
+//                    System.out.println("text : " + link.text());
+                }
                 
             } catch (IOException e) {
                 System.out.println(urls.get(0) + " not working");
             }
-            
+            urls.remove(0);
         }
     }
     
