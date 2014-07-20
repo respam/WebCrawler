@@ -27,6 +27,8 @@ public class WebCrawler {
         // TODO code application logic here
         FileRead fileR = new FileRead();
         ArrayList<String> links = fileR.read();
+        System.getProperties().put("http.proxyHost", "web-proxy.cce.hp.com");
+        System.getProperties().put("http.proxyPort", "8080");
         
         for (String lns : links) {
             System.out.println("URLs present in " + lns + ":\n");
@@ -38,29 +40,37 @@ public class WebCrawler {
     public void crawl(String url) {
         
         ArrayList<String> urls = new ArrayList<>();
-//        ArrayList<String> visited = new ArrayList<>();
+        ArrayList<String> visited = new ArrayList<>();
         
         urls.add(url);
-//        visited.add(url);
+        visited.add(url);
         
         while (urls.size() > 0) {
             Document doc;
             try {
-                doc = Jsoup.connect(url).get();
-                
+                doc = Jsoup.connect(urls.get(0)).get();
                 // getting all links
                 Elements links = doc.select("a[href]");
                 for (Element link : links) {
                     
                     //getting the value from href attribute
                     System.out.println(link.attr("href"));
-//                    System.out.println("text : " + link.text());
+                    
+                    if (visited.contains(link.attr("href"))) {
+                        
+                    } else {
+                        urls.add(link.attr("href"));
+                        visited.add(link.attr("href"));
+                    }
                 }
                 
             } catch (IOException e) {
                 System.out.println(urls.get(0) + " not working");
             }
             urls.remove(0);
+        }
+        for ( String i : visited) {
+            System.out.println(i);
         }
     }
     
